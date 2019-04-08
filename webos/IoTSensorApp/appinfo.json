@@ -1,0 +1,11 @@
+{
+  "id": "com.sample.iotsensor",
+  "version": "1.0.0",
+  "vendor": "Infineon Technologies",
+  "type": "web",
+  "main": "index.html",
+  "title": "IoT Sensor 2Go",
+  "icon": "puzz_small.png",
+  "largeIcon": "puzz.png",
+  "uiRevision": 2
+}

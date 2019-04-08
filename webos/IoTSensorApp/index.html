@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<title>IoT Sensor 2Go</title>
+<link rel="stylesheet" href="css/index.css" type="text/css" media="all" />
+<script src="webOSjs-0.1.0/webOS.js" charset="utf-8"></script>
+<script language="javascript" type="text/javascript">
+
+  var ws_server_ip = '10.120.128.25';  //Websocket server ip address
+  var msgReceived  = true;             //Flag for received message
+  var replyLostCnt = 0;                //Number of messages not replied from sensor
+  var intervalID;                      //Sensor data request interval ID
+
+  function init()
+  {
+    document.getElementById("status").innerHTML = "Off";
+    document.getElementById("temp").innerHTML = "--";
+    document.getElementById("press").innerHTML = "--";
+    testWebSocket(ws_server_ip);
+  }
+
+  function testWebSocket(ip)
+  {
+    if (window.location.protocol === "file:")
+      var url = 'ws://'+ ip +':80';
+    else
+      var url = ((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + ':80';
+
+    websocket = new WebSocket(url);
+    websocket.onopen = function(evt) { onOpen(evt) };
+    websocket.onclose = function(evt) { onClose(evt) };
+    websocket.onmessage = function(evt) { onMessage(evt) };
+    websocket.onerror = function(evt) { onError(evt) };
+  }
+
+  function onOpen(evt)
+  {
+    console.log("CONNECTED");
+    document.getElementById("status").innerHTML = "On";
+    intervalID = setInterval(function(){doSend();}, 2000);
+    showNotification("Sensor device connected");
+  }
+
+  function onClose(evt)
+  {
+    console.log("DISCONNECTED");
+    document.getElementById("status").innerHTML = "Off";
+    document.getElementById("temp").innerHTML = "--";
+    document.getElementById("press").innerHTML = "--";
+    clearInterval(intervalID);
+    showNotification("Sensor device disconnected");
+  }
+
+  function onMessage(evt)
+  {
+    var message = JSON.parse(evt.data);
+
+    msgReceived = true;
+    console.log('>RESPONSE: ' +evt.data);
+    document.getElementById("status").innerHTML = "On";
+    document.getElementById("temp").innerHTML = message.sensors.temperature;
+    document.getElementById("press").innerHTML = message.sensors.pressure;
+    document.getElementById("uid").innerHTML = message.uniqueID.substr(0,6);
+  }
+
+  function onError(evt)
+  {
+    console.log('">ERROR:' + evt.data);
+    document.getElementById("status").innerHTML = "Off";
+    document.getElementById("temp").innerHTML = "--";
+    document.getElementById("press").innerHTML = "--";
+    clearInterval(intervalID);
+    showNotification("Sensor communication error");
+    websocket.close();
+  }
+
+  function doSend()
+  {
+    /*JSON API commands to retrieve data from sensor */
+    var jsonGetData = {"command": 1, "sensors":["pressure","temperature"]}; //Specify sensors 
+    var jsonGetDataAll = {"command": 2};                                    //All sensors
+
+    if(msgReceived)
+    {
+      console.log("SENT: " + JSON.stringify(jsonGetData));
+      websocket.send(JSON.stringify(jsonGetData));
+      msgReceived = false;
+    }
+    else
+    {
+      if(++replyLostCnt >= 2)
+      {
+        replyLostCnt = 0;
+        msgReceived = true;  
+        document.getElementById("status").innerHTML = "??";
+        document.getElementById("temp").innerHTML = "--";
+        document.getElementById("press").innerHTML = "--";
+        showNotification("Sensor communication lost");
+      }
+    }
+  }
+
+  function showNotification(message)
+  {
+    var lunaReq = webOS.service.request("luna://com.webos.notification",
+                {
+                    method:"createToast",
+                    parameters:{
+                        "sourceId" : "com.sample.websocket",
+                        "message"  : message
+                    },
+                    onSuccess: function (args) {
+
+                    },
+                    onFailure: function (args) {
+                    }
+                });
+  }
+  window.addEventListener("load", init, false);
+
+</script>
+
+<body>
+  <img src="IFX_LOGO_RGB.png" alt="ifx_logo" id="ifxLogo">
+  <h2>IoT Sensor 2Go</h2>
+  <div class="tile job">
+    <div class="header">
+      <div class="count" id="status"></div>
+      <div class="title" id="uid">ID</div>
+    </div>
+    <div class="body">
+      <div class="title">Status</div>
+    </div>
+  </div>
+  <div class="tile job">
+    <div class="header">
+      <div class="count" id="temp"></div>
+      <div class="title">°C</div>
+    </div>
+    <div class="body">
+      <div class="title">Temperature</div>
+    </div>
+  </div>
+  <div class="tile job">
+    <div class="header">
+      <div class="count" id="press"></div>
+      <div class="title">Pascal</div>
+    </div>
+    <div class="body">
+      <div class="title">Pressure</div>
+    </div>
+  </div>
+</body>
