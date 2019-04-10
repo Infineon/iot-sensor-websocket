@@ -37,7 +37,7 @@ Required components:
 
  - Shield 2Go 3 Sockets Adapter Board <img src="docs/img/Shield2Go-3sockets-adapter.png" height="40">
 
- - [Optiga Trust X](https://github.com/Infineon/arduino-optiga-trust-x) Shield2Go <img src="docs/img/DPS310-Shield2go-top-plain.png" height="30"> 
+ - [Optiga Trust X](https://github.com/Infineon/arduino-optiga-trust-x) Shield2Go <img src="docs/img/OPTIGATrustX-Shield2go-top-plain.png" height="30"> 
 
  - [DPS310 Pressure Sensor](https://github.com/Infineon/DPS310-Pressure-Sensor) Shield2GO <img src="docs/img/DPS310-Shield2go-top-plain.png" height="30"> 
   
