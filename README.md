@@ -90,7 +90,7 @@ If the Arduino IDE is chosen, any non-official library has to be installed manua
   - esp32 V1.0.1 (Boards)
   - ArduinoJson V6.9.1
 
-<a name="#node-setup"></a>   
+<a name="node-setup"></a>   
 
 ## 4. Sensor Node Setup
 -----------------------------
@@ -248,7 +248,7 @@ Before starting with webOS. We will verify our WebSocket client-server connectio
     The client disconnected
     ```
 
-<a name="#webOS-setup"></a>   
+<a name="webOS-setup"></a>   
 ## 5. webOS App Setup 
 -----------------------------
 
@@ -299,6 +299,7 @@ All the documentation relative to webOS can be found in the [official website](h
 
     The example is finally up and running :) Now it is your turn to develop! You have everything you need to create cool embedded applications, and integrate them with amazing services and GUIs in webOS. 
 
+<a name="refs"></a>  
 ## 6. References
 -----------------------------
 
