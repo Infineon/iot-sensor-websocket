@@ -75,7 +75,7 @@ The rest of the sensors of the [Infineon XENSIV™ - Sensor 2GO kits](https://ww
 
 ### Firmware Libraries
 
-- [ifx-esp32-node](link_to_this_repo) (this repository :))
+- [iot-sensor-websocket](https://github.com/Infineon/iot-sensor-websocket/) (this repository :))
 
 If the **recommended** Visual Studio Code + PlatformIO IDE is used, no fimrware libraries needs to be downloaded. PlatformIO itself will take care of downloading the libraries and manage the dependencies.
 
